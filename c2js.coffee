@@ -1,24 +1,21 @@
-s = "int fib(int i) {
+s = "
+int fib(int i) {
   int f1=0;
   int f2=1;
   int q=0;
   while (q<i-1) {
-  ;
     int tmp = f2;
     f2 = f1+f2;
     f1 = tmp;
-    q=q+1;
+    q = q+1;
   }
   return f1;
 }
 int main(){
-  int i=0;
-  while (i<20) {
-    printf(\"%d\",fib(i));
-    i=i+1;
-  }
+  printf(\"%d\",fib(7));
   return 0;
-}"
+}
+"
 
 sprintf = `function () {
   function str_repeat(j, c) {
@@ -90,15 +87,30 @@ copy_til_semi = (output, tokens) ->
   i++
   i
 
+copy_parens_inside = (output, tokens) ->
+  i=1
+  output.push '('
+  oparen_count = 1
+  while oparen_count > 0
+    switch tokens[i]
+      when '('
+        oparen_count++
+      when ')'
+        oparen_count--
+    output.push tokens[i]
+    i++
+  i
 
 compile = (c_code) ->
   output = []
   c_code = replace_things c_code
   tokens = c_code.split " "
-  tokens = tokens.filter (t) -> t.trim() != ''
+  tokens = tokens.map (t) -> t.trim()
+  tokens = tokens.filter (t) -> t != ''
   close_brackets = []
   i=0
   while i < tokens.length
+    debugger
     if tokens[i] in types
       switch tokens[i+2]
         when '('
@@ -140,7 +152,32 @@ compile = (c_code) ->
     else
       switch tokens[i]
         when '}'
-          output.push '}'
+          output.push close_brackets.pop()
+          i++
+        when 'while'
+          output.push tokens[i]
+          i+=1
+          i+=copy_parens_inside(output,tokens[i..])
+          if tokens[i] == '{'
+            output.push '{(function(){'
+            close_brackets.push '})();}'
+          i++
+#        when 'for'
+        when 'if'
+          output.push tokens[i]
+          i+=1
+          i+=copy_parens_inside(output,tokens[i..])
+          if tokens[i] == '{'
+            output.push '{(function(){'
+            close_brackets.push '})();}'
+          i++
+        when 'else'
+          output.push tokens[i]
+          i+=1
+          i+=copy_parens_inside(output,tokens[i..])
+          if tokens[i] == '{'
+            output.push '{(function(){'
+            close_brackets.push '})();}'
           i++
         else
           i += copy_til_semi(output, tokens[i..])
@@ -149,13 +186,13 @@ compile = (c_code) ->
       outputstr += put + ' '
   return outputstr
 
-#while 1
-#  i = window.prompt("enter C code here:","")
-#  if not i or i == 'quit'
-#    break
-#  eval(compile i)
-#  main()
+while 1
+  i = window.prompt("enter C code here:","")
+  if not i or i == 'quit'
+    break
+  eval(compile i)
+  main()
 
-eval(compile s)
-main()
+#eval(compile s)
+#main()
 
