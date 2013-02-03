@@ -74,7 +74,7 @@ window.malloc = () -> {}
 window.calloc = () -> {}
 window.sizeof = () -> 8
 
-types = ["int"]
+types = ["int","var"]
 
 things =
   '\\(': ' ( '
@@ -97,12 +97,25 @@ things =
   '[*]\\s*=': ' *= '
   '[/]\\s*=': ' /= '
   'NULL': 'null'
+  "=\\s*{([^;]*)}\\s*;":  ' = [ $1 ] ; '
+
+orderedthings = [
+ '\\(', '\\)', '{', '}', '=', '-', '>', '<', '\\+', '\\*', '/', ';', ',',
+ '[+]\\s*[+]', '-\\s*-', '[+]\\s*=', '-\\s*=', '[*]\\s*=', '[/]\\s*=', 'NULL'
+]
 
 for type in types
-  things[("[^_A-Za-z]#{type}[\\s*]*")] = ' var '
+  orderedthings.push "([^_A-Za-z])#{type}[\\s*]*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"
+  things["([^_A-Za-z])#{type}[\\s*]*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"] = ' var $2 '
+  orderedthings.push "([^_A-Za-z])#{type}[\\s*]*"
+  things["([^_A-Za-z])#{type}[\\s*]*"] = ' var '
+
+  #types["=\\s*{(.*)}\\s*;"] = ' = [ $1 ] ; '
+orderedthings.push "=\\s*{([^;]*)}\\s*;"
 
 replace_things = (s) ->
-  for thing,replacement of things
+  for thing in orderedthings
+    replacement = things[thing]
     s = s.replace(RegExp(thing,'g'), replacement)
   s
 
@@ -157,9 +170,11 @@ compile = (c_code) ->
   output = []
   c_code = preprocess c_code
   c_code = replace_things c_code
+  console.log c_code
   tokens = c_code.split " "
   tokens = tokens.map (t) -> t.trim()
   tokens = tokens.filter (t) -> t != ''
+  console.log tokens
   close_brackets = []
   i=0
   while i < tokens.length
