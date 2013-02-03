@@ -1,0 +1,46 @@
+<!doctype html>
+
+<html>
+
+	<head>
+
+		<script src="dropbox.js"></script>
+        <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropbox.js" id="dropboxjs" data-app-key="idd3du65x9bazoj"></script>
+		<script>
+			alert("Beginning script");
+			var client = new Dropbox.Client({
+    				key: "lENFZYkhr6A=|2gZ4zbMgv/TA02gT7pCx5+SoQIqvu3PLriUP9LZtcg==", sandbox: true
+			});
+			client.authDriver(new Dropbox.Drivers.Redirect());
+			client.authenticate(function(error, client) {
+			  if (error) {
+				alert("ERRRRRORRRRR");
+				}
+
+			});
+
+		</script>
+
+		<title>c2js</title>
+
+	</head>
+
+
+	<body>
+	  <h1>c2js</h1>
+      <input type="dropbox-chooser" name="selected-file" id="db-chooser" data-link-type="direct"/>
+      <script type="text/javascript">
+        document.getElementById("db-chooser").addEventListener("DbxChooserSuccess",
+        function(e) {
+          var request = new XMLHttpRequest();
+          request.open("GET", "/dbdl?url=" + escape(e.files[0].link));
+          request.send(null);
+          console.log(request.response);
+        }, false);
+      </script>
+
+
+	</body>
+
+
+</html>
