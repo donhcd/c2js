@@ -255,10 +255,12 @@ compile = (c_code) ->
         when 'else'
           output.push tokens[i]
           i+=1
-          #i+=copy_parens_inside(output,tokens[i..])
-          if tokens[i] == '{'
-            output.push '{(function(){'
-            close_brackets.push '})();}'
+          if tokens[i] == 'if'
+            output.push tokens[i]
+            i+=1
+            i+=copy_parens_inside(output,tokens[i..])
+          output.push '{(function(){'
+          close_brackets.push '})();}'
           i++
         else
           i += copy_til_semi(output, tokens[i..])

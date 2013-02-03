@@ -279,10 +279,13 @@ function () {
           case 'else':
             output.push(tokens[i]);
             i += 1;
-            if (tokens[i] === '{') {
-              output.push('{(function(){');
-              close_brackets.push('})();}');
+            if (tokens[i] === 'if') {
+              output.push(tokens[i]);
+              i += 1;
+              i += copy_parens_inside(output, tokens.slice(i));
             }
+            output.push('{(function(){');
+            close_brackets.push('})();}');
             i++;
             break;
           default:
