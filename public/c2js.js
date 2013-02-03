@@ -188,7 +188,6 @@ function () {
     output = [];
     c_code = preprocess(c_code);
     c_code = replace_things(c_code);
-    console.log(c_code);
     tokens = c_code.split(" ");
     tokens = tokens.map(function(t) {
       return t.trim();
@@ -196,7 +195,6 @@ function () {
     tokens = tokens.filter(function(t) {
       return t !== '';
     });
-    console.log(tokens);
     close_brackets = [];
     i = 0;
     while (i < tokens.length) {
@@ -295,8 +293,6 @@ function () {
       put = output[_j];
       outputstr += put + ' ';
     }
-    console.log(outputstr);
-    alert(outputstr);
     return outputstr;
   };
 

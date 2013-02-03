@@ -173,11 +173,11 @@ compile = (c_code) ->
   output = []
   c_code = preprocess c_code
   c_code = replace_things c_code
-  console.log c_code
+  #console.log c_code
   tokens = c_code.split " "
   tokens = tokens.map (t) -> t.trim()
   tokens = tokens.filter (t) -> t != ''
-  console.log tokens
+  #console.log tokens
   close_brackets = []
   i=0
   while i < tokens.length
@@ -263,8 +263,8 @@ compile = (c_code) ->
   outputstr = ''
   for put in output
     outputstr += put + ' '
-  console.log outputstr
-  alert outputstr
+  #console.log outputstr
+  #alert outputstr
   return outputstr
 
 #while 1
