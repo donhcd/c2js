@@ -96,17 +96,20 @@ things =
   '-\\s*=': ' -= '
   '[*]\\s*=': ' *= '
   '[/]\\s*=': ' /= '
+  '>\\s*=': ' >= '
+  '<\\s*=': ' <= '
   'NULL': 'null'
   "=\\s*{([^;]*)}\\s*;":  ' = [ $1 ] ; '
 
 orderedthings = [
  '\\(', '\\)', '{', '}', '=', '-', '>', '<', '\\+', '\\*', '/', ';', ',',
- '[+]\\s*[+]', '-\\s*-', '[+]\\s*=', '-\\s*=', '[*]\\s*=', '[/]\\s*=', 'NULL'
+ '[+]\\s*[+]', '-\\s*-', '[+]\\s*=', '-\\s*=', '[*]\\s*=', '[/]\\s*=', 'NULL',
+ '>\\s*=', '<\\s*='
 ]
 
 for type in types
-  orderedthings.push "([^_A-Za-z])#{type}[\\s*]*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"
-  things["([^_A-Za-z])#{type}[\\s*]*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"] = ' var $2 '
+  orderedthings.push "([^_A-Za-z])#{type}\\s*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"
+  things["([^_A-Za-z])#{type}\\s*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"] = ' var $2 '
   orderedthings.push "([^_A-Za-z])#{type}[\\s*]*"
   things["([^_A-Za-z])#{type}[\\s*]*"] = ' var '
 
@@ -259,7 +262,9 @@ compile = (c_code) ->
           i += copy_til_semi(output, tokens[i..])
   outputstr = ''
   for put in output
-      outputstr += put + ' '
+    outputstr += put + ' '
+  console.log outputstr
+  alert outputstr
   return outputstr
 
 #while 1

@@ -94,16 +94,18 @@ function () {
     '-\\s*=': ' -= ',
     '[*]\\s*=': ' *= ',
     '[/]\\s*=': ' /= ',
+    '>\\s*=': ' >= ',
+    '<\\s*=': ' <= ',
     'NULL': 'null',
     "=\\s*{([^;]*)}\\s*;": ' = [ $1 ] ; '
   };
 
-  orderedthings = ['\\(', '\\)', '{', '}', '=', '-', '>', '<', '\\+', '\\*', '/', ';', ',', '[+]\\s*[+]', '-\\s*-', '[+]\\s*=', '-\\s*=', '[*]\\s*=', '[/]\\s*=', 'NULL'];
+  orderedthings = ['\\(', '\\)', '{', '}', '=', '-', '>', '<', '\\+', '\\*', '/', ';', ',', '[+]\\s*[+]', '-\\s*-', '[+]\\s*=', '-\\s*=', '[*]\\s*=', '[/]\\s*=', 'NULL', '>\\s*=', '<\\s*='];
 
   for (_i = 0, _len = types.length; _i < _len; _i++) {
     type = types[_i];
-    orderedthings.push("([^_A-Za-z])" + type + "[\\s*]*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+");
-    things["([^_A-Za-z])" + type + "[\\s*]*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"] = ' var $2 ';
+    orderedthings.push("([^_A-Za-z])" + type + "\\s*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+");
+    things["([^_A-Za-z])" + type + "\\s*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"] = ' var $2 ';
     orderedthings.push("([^_A-Za-z])" + type + "[\\s*]*");
     things["([^_A-Za-z])" + type + "[\\s*]*"] = ' var ';
   }
@@ -293,6 +295,8 @@ function () {
       put = output[_j];
       outputstr += put + ' ';
     }
+    console.log(outputstr);
+    alert(outputstr);
     return outputstr;
   };
 
