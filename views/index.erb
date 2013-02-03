@@ -1,38 +1,43 @@
 <!doctype html>
-
 <html>
-
 <head>
-
+<link rel="stylesheet" type="text/css" href="index.css">
 <script src="dropbox.js"></script>
 <script src="beautify.js"></script>
-<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropbox.js" id="dropboxjs" data-app-key="ml6f2ilwn69g428"></script>
+<!-- <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropbox.js" id="dropboxjs" data-app-key="ml6f2ilwn69g428"></script> -->
+<script type="text/javascript" src="dropboxchooser.js" id="dropboxjs" data-app-key="ml6f2ilwn69g428"></script>
 <script src="c2js.js"></script>
-<script>
-//var client = new Dropbox.Client({
-//  key: "lENFZYkhr6A=|2gZ4zbMgv/TA02gT7pCx5+SoQIqvu3PLriUP9LZtcg==", sandbox: true
-//});
-//client.authDriver(new Dropbox.Drivers.Redirect());
-//client.authenticate(function(error, client) {
-//  if (error) {
-//    alert("ERRRRRORRRRR");
-//  }
-//
-//});
-</script>
-
+<!-- <script>
+var client = new Dropbox.Client({
+  key: "lENFZYkhr6A=|2gZ4zbMgv/TA02gT7pCx5+SoQIqvu3PLriUP9LZtcg==", sandbox: true
+});
+client.authDriver(new Dropbox.Drivers.Redirect());
+client.authenticate(function(error, client) {
+  if (error) {
+    alert("ERRRRRORRRRR");
+  }
+});
+</script> -->
 <title>c2js</title>
-
 </head>
-
-
 <body>
 <h1>c2js</h1>
 <input type="dropbox-chooser" name="selected-file" id="db-chooser" data-link-type="direct"/>
-<input type="button" value="doit" onclick="eval(jscode);main();"/>
-<textarea id="ccode" rows="50" cols="80"></textarea>
-<textarea id="jscode" rows="50" cols="80"></textarea>
+<input type="button" value="Run" onclick="eval(compilec());main();"/>
+<input type="button" value="Link" onclick="link()"/>
+<p></p>
+<textarea id="ccode" rows="50" cols="80"><%= ccode %></textarea>
+<textarea id="jscode" rows="50" cols="80" readonly="true"></textarea>
 <script type="text/javascript">
+function compilec(){
+  var ccode = document.getElementById('ccode').value;
+  if (ccode.trim() === '') {
+    return '';
+  }
+  var jscode = js_beautify(window.compile(ccode));
+  document.getElementById('jscode').value = jscode;
+  return jscode;
+}
 document.getElementById("db-chooser").addEventListener(
   "DbxChooserSuccess",
   function(e) {
@@ -46,15 +51,16 @@ document.getElementById("db-chooser").addEventListener(
     request.send(null);
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
-        ccode = request.responseText;
-        console.log(ccode);
-        document.getElementById('ccode').value = ccode;
-        jscode = window.compile(ccode);
-        jscode = js_beautify(jscode);
-        document.getElementById('jscode').value = jscode;
+        document.getElementById('ccode').value = request.responseText;;
+        compilec();
       } 
     };
   }, false);
+function link(){
+  newuri='try?code=' + escape(document.getElementById('ccode').value);
+  window.history.pushState("","",newuri);
+}
+compilec();
 </script>
 
 
