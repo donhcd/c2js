@@ -23,7 +23,8 @@ client.authenticate(function(error, client) {
 <body>
 <h1>c2js</h1>
 <input type="dropbox-chooser" name="selected-file" id="db-chooser" data-link-type="direct"/>
-<input type="button" value="Run" onclick="eval(compilec());main();"/>
+<input type="button" value="Compile" onclick="compilec();"/>
+<input type="button" value="Run" onclick="run()"/>
 <input type="button" value="Link" onclick="link()"/>
 <p></p>
 <textarea id="ccode" rows="40" cols="80"><%= ccode %></textarea>
@@ -37,6 +38,10 @@ function compilec(){
   var jscode = js_beautify(window.compile(ccode));
   document.getElementById('jscode').value = jscode;
   return jscode;
+}
+function run(){
+  eval(document.getElementById('jscode').value);
+  main();
 }
 document.getElementById("db-chooser").addEventListener(
   "DbxChooserSuccess",
@@ -61,6 +66,8 @@ function link(){
   window.history.pushState("","",newuri);
 }
 compilec();
+//document.getElementById('ccode').oninput = compilec;
+//document.getElementById('ccode').onpropertychange = compilec;
 </script>
 
 
