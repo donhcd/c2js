@@ -65,10 +65,14 @@ function () {
   return o.join('');
 }`
 
+# so many hacks here
 window.printf = (args...) ->
   s = sprintf args...
   alert(s)
   #document.body.innerHTML += "<p>#{s}</p>"
+window.malloc = () -> {}
+window.calloc = () -> {}
+window.sizeof = () -> 8
 
 types = ["int"]
 
@@ -92,6 +96,10 @@ things =
   '-\\s*=': ' -= '
   '[*]\\s*=': ' *= '
   '[/]\\s*=': ' /= '
+  'NULL': 'null'
+
+for type in types
+  things[("[^_A-Za-z]#{type}[\\s*]*")] = ' var '
 
 replace_things = (s) ->
   for thing,replacement of things
@@ -131,7 +139,7 @@ copy_parens_inside_rplc_var = (output, tokens) ->
         oparen_count++
       when ')'
         oparen_count--
-    if tokens[i] in types
+    if tokens[i] == 'var'
       output.push 'var'
     else
       output.push tokens[i]
@@ -140,7 +148,7 @@ copy_parens_inside_rplc_var = (output, tokens) ->
 
 preprocess = (code) ->
   # fuck #define's; we ignore that shit.
-  code = code.replace(/\/\*.*\*\//g, '')
+  code = " #{code}".replace(/\/\*.*\*\//g, '')
   code = code.replace(/\/\/.*\n/g, '')
   code = code.replace(/\n#.*\n/g, '\n')
   code
@@ -156,7 +164,7 @@ compile = (c_code) ->
   i=0
   while i < tokens.length
     #debugger
-    if tokens[i] in types
+    if tokens[i] == 'var'
       switch tokens[i+2]
         when '('
           # function definition
