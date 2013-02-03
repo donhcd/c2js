@@ -5,20 +5,20 @@
 <head>
 
 <script src="dropbox.js"></script>
+<script src="beautify.js"></script>
 <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropbox.js" id="dropboxjs" data-app-key="ml6f2ilwn69g428"></script>
 <script src="c2js.js"></script>
 <script>
-var client = new Dropbox.Client({
-  key: "lENFZYkhr6A=|2gZ4zbMgv/TA02gT7pCx5+SoQIqvu3PLriUP9LZtcg==", sandbox: true
-});
-client.authDriver(new Dropbox.Drivers.Redirect());
-client.authenticate(function(error, client) {
-  if (error) {
-    alert("ERRRRRORRRRR");
-  }
-
-});
-
+//var client = new Dropbox.Client({
+//  key: "lENFZYkhr6A=|2gZ4zbMgv/TA02gT7pCx5+SoQIqvu3PLriUP9LZtcg==", sandbox: true
+//});
+//client.authDriver(new Dropbox.Drivers.Redirect());
+//client.authenticate(function(error, client) {
+//  if (error) {
+//    alert("ERRRRRORRRRR");
+//  }
+//
+//});
 </script>
 
 <title>c2js</title>
@@ -29,17 +29,29 @@ client.authenticate(function(error, client) {
 <body>
 <h1>c2js</h1>
 <input type="dropbox-chooser" name="selected-file" id="db-chooser" data-link-type="direct"/>
+<input type="button" value="doit" onclick="eval(jscode);main();"/>
+<textarea id="ccode" rows="50" cols="80"></textarea>
+<textarea id="jscode" rows="50" cols="80"></textarea>
 <script type="text/javascript">
 document.getElementById("db-chooser").addEventListener(
   "DbxChooserSuccess",
   function(e) {
     var request = new XMLHttpRequest();
-    request.open("GET", "/dbdl?url=" + escape(e.files[0].link));
+    var url = e.files[0].link;
+    if (url.substr(-2) != '.c') {
+      alert('please don\'t fuck with me');
+      return;
+    }
+    request.open("GET", "/dbdl?url=" + escape(url));
     request.send(null);
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
-        console.log(request.responseText);
-        console.log(window.compile(request.responseText));
+        ccode = request.responseText;
+        console.log(ccode);
+        document.getElementById('ccode').value = ccode;
+        jscode = window.compile(ccode);
+        jscode = js_beautify(jscode);
+        document.getElementById('jscode').value = jscode;
       } 
     };
   }, false);

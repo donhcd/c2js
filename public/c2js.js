@@ -57,7 +57,7 @@
     var args;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     s = sprintf.apply(null, args);
-    return document.body.innerHTML += "<p>" + s + "</p>";
+    return alert(s);
   };
 
   types = ["int"];

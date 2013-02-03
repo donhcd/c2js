@@ -66,8 +66,8 @@ sprintf = `function () {
 
 window.printf = (args...) ->
   s = sprintf args...
-  #alert(s)
-  document.body.innerHTML += "<p>#{s}</p>"
+  alert(s)
+  #document.body.innerHTML += "<p>#{s}</p>"
 
 types = ["int"]
 
