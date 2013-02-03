@@ -101,6 +101,23 @@ copy_parens_inside = (output, tokens) ->
     i++
   i
 
+copy_parens_inside_rplc_var = (output, tokens) ->
+  i=1
+  output.push '('
+  oparen_count = 1
+  while oparen_count > 0
+    switch tokens[i]
+      when '('
+        oparen_count++
+      when ')'
+        oparen_count--
+    if tokens[i] in types
+      output.push 'var'
+    else
+      output.push tokens[i]
+    i++
+  i
+
 compile = (c_code) ->
   output = []
   c_code = replace_things c_code
@@ -162,7 +179,15 @@ compile = (c_code) ->
             output.push '{(function(){'
             close_brackets.push '})();}'
           i++
-#        when 'for'
+        when 'for'
+          i+=1
+          output.push '(function(){'
+          output.push 'for'
+          i+=copy_parens_inside_rplc_var(output,tokens[i..])
+          if tokens[i] == '{'
+            output.push '{'
+            close_brackets.push '}})();'
+          i++
         when 'if'
           output.push tokens[i]
           i+=1
