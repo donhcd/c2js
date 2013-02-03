@@ -62,13 +62,33 @@
 
   types = ["int"];
 
-  things = ['\\(', '\\)', '{', '}', '=', '-', '\\+', '\\*', '/', ';', ','];
+  things = {
+    '\\(': ' ( ',
+    '\\)': ' ) ',
+    '{': ' { ',
+    '}': ' } ',
+    '=': ' = ',
+    '-': ' - ',
+    '>': ' > ',
+    '<': ' < ',
+    '\\+': ' + ',
+    '\\*': ' * ',
+    '/': ' / ',
+    ';': ' ; ',
+    ',': ' , ',
+    '[+]\\s*[+]': ' ++ ',
+    '-\\s*-': ' -- ',
+    '[+]\\s*=': ' += ',
+    '-\\s*=': ' -= ',
+    '[*]\\s*=': ' *= ',
+    '[/]\\s*=': ' /= '
+  };
 
   replace_things = function(s) {
-    var thing, _i, _len;
-    for (_i = 0, _len = things.length; _i < _len; _i++) {
-      thing = things[_i];
-      s = s.replace(RegExp(thing, 'g'), " " + (thing.replace('\\', '')) + " ");
+    var replacement, thing;
+    for (thing in things) {
+      replacement = things[thing];
+      s = s.replace(RegExp(thing, 'g'), replacement);
     }
     return s;
   };

@@ -71,11 +71,30 @@ printf = (args...) ->
 
 types = ["int"]
 
-things = ['\\(','\\)','{','}','=','-','\\+','\\*','/',';', ',']
+things =
+  '\\(': ' ( '
+  '\\)': ' ) '
+  '{': ' { '
+  '}': ' } '
+  '=': ' = '
+  '-': ' - '
+  '>': ' > '
+  '<': ' < '
+  '\\+': ' + '
+  '\\*': ' * '
+  '/': ' / '
+  ';': ' ; '
+  ',': ' , '
+  '[+]\\s*[+]': ' ++ '
+  '-\\s*-': ' -- '
+  '[+]\\s*=': ' += '
+  '-\\s*=': ' -= '
+  '[*]\\s*=': ' *= '
+  '[/]\\s*=': ' /= '
 
 replace_things = (s) ->
-  for thing in things
-    s = s.replace(RegExp(thing,'g'), " #{thing.replace('\\','')} ")
+  for thing,replacement of things
+    s = s.replace(RegExp(thing,'g'), replacement)
   s
 
 copy_til_semi = (output, tokens) ->
