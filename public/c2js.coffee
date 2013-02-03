@@ -74,7 +74,7 @@ window.malloc = () -> {}
 window.calloc = () -> {}
 window.sizeof = () -> 8
 
-types = ["int","var"]
+types = ["int","char","var"]
 
 things =
   '\\(': ' ( '
@@ -98,7 +98,7 @@ things =
   '[/]\\s*=': ' /= '
   '>\\s*=': ' >= '
   '<\\s*=': ' <= '
-  'NULL': 'null'
+  'NULL': ' null '
   "=\\s*{([^;]*)}\\s*;":  ' = [ $1 ] ; '
 
 orderedthings = [
@@ -109,9 +109,9 @@ orderedthings = [
 
 for type in types
   orderedthings.push "([^_A-Za-z])#{type}\\s*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"
-  things["([^_A-Za-z])#{type}\\s*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"] = ' var $2 '
+  things["([^_A-Za-z])#{type}\\s*([_A-Za-z]+)(\\s*\\[\\s*\\d*\\s*\\])+"] = ' $1 var $2 '
   orderedthings.push "([^_A-Za-z])#{type}[\\s*]*"
-  things["([^_A-Za-z])#{type}[\\s*]*"] = ' var '
+  things["([^_A-Za-z])#{type}[\\s*]*"] = ' $1 var '
 
   #types["=\\s*{(.*)}\\s*;"] = ' = [ $1 ] ; '
 orderedthings.push "=\\s*{([^;]*)}\\s*;"
@@ -181,7 +181,9 @@ compile = (c_code) ->
   close_brackets = []
   i=0
   while i < tokens.length
-    #debugger
+    #    console.log(tokens[i..]);
+    #    console.log(output);
+    #    debugger
     if tokens[i] == 'var'
       switch tokens[i+2]
         when '('
@@ -253,7 +255,7 @@ compile = (c_code) ->
         when 'else'
           output.push tokens[i]
           i+=1
-          i+=copy_parens_inside(output,tokens[i..])
+          #i+=copy_parens_inside(output,tokens[i..])
           if tokens[i] == '{'
             output.push '{(function(){'
             close_brackets.push '})();}'
