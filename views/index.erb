@@ -26,8 +26,8 @@ client.authenticate(function(error, client) {
 <input type="button" value="Run" onclick="eval(compilec());main();"/>
 <input type="button" value="Link" onclick="link()"/>
 <p></p>
-<textarea id="ccode" rows="50" cols="80"><%= ccode %></textarea>
-<textarea id="jscode" rows="50" cols="80" readonly="true"></textarea>
+<textarea id="ccode" rows="40" cols="80"><%= ccode %></textarea>
+<textarea id="jscode" rows="40" cols="80" readonly="true"></textarea>
 <script type="text/javascript">
 function compilec(){
   var ccode = document.getElementById('ccode').value;
