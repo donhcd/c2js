@@ -64,7 +64,7 @@ sprintf = `function () {
 	return o.join('');
 }`
 
-printf = (args...) ->
+window.printf = (args...) ->
   s = sprintf args...
   #alert(s)
   document.body.innerHTML += "<p>#{s}</p>"
@@ -146,7 +146,7 @@ compile = (c_code) ->
   close_brackets = []
   i=0
   while i < tokens.length
-    debugger
+    #debugger
     if tokens[i] in types
       switch tokens[i+2]
         when '('
@@ -230,12 +230,14 @@ compile = (c_code) ->
       outputstr += put + ' '
   return outputstr
 
-while 1
-  i = window.prompt("enter C code here:","")
-  if not i or i == 'quit'
-    break
-  eval(compile i)
-  main()
+#while 1
+#  i = window.prompt("enter C code here:","")
+#  if not i or i == 'quit'
+#    break
+#  eval(compile i)
+#  main()
+
+window.compile = compile
 
 #eval(compile s)
 #main()

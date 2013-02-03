@@ -12,4 +12,5 @@ get '/dbdl' do
   result = open(url, 'rb').read()
   puts(url)
   puts(result);
+  result
 end
