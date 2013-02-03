@@ -138,8 +138,16 @@ copy_parens_inside_rplc_var = (output, tokens) ->
     i++
   i
 
+preprocess = (code) ->
+  # fuck #define's; we ignore that shit.
+  code = code.replace(/\/\*.*\*\//g, '')
+  code = code.replace(/\/\/.*\n/g, '')
+  code = code.replace(/\n#.*\n/g, '\n')
+  code
+
 compile = (c_code) ->
   output = []
+  c_code = preprocess c_code
   c_code = replace_things c_code
   tokens = c_code.split " "
   tokens = tokens.map (t) -> t.trim()
