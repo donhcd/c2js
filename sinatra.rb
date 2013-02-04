@@ -7,17 +7,18 @@ default_code =
   int f1=0;
   int f2=1;
   for (int q=0; q<i-1; q++) {
-    int tmp = f2;
-    f2 = f1+f2;
-    f1 = tmp;
+    f1 += f2;
+    f2 ^= f1;
+    f1 ^= f2;
+    f2 ^= f1;
   }
   return f1;
 }
+
 int main(){
   printf(\"%d\",fib(7));
   return 0;
-}
-"
+}"
 
 get '/' do
   erb :index, :locals => {
